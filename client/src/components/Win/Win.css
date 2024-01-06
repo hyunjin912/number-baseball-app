@@ -1,0 +1,48 @@
+.win {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  cursor: pointer;
+}
+
+.win.show {
+  z-index: 3;
+}
+
+.effect {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.effect_text {
+  font-family: 'Sigmar One', cursive;
+  font-size: 80px;
+  white-space: nowrap;
+  padding: 0.5em;
+}
+
+.effect_bubles {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.buble {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #ffb300;
+  border-radius: 50%;
+}
+
+@media (max-width: 750px) {
+  .effect_text {
+    font-size: 40px;
+  }
+}

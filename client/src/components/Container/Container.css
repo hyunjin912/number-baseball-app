@@ -1,0 +1,51 @@
+.container {
+  position: relative;
+}
+
+.bg {
+  z-index: -1;
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url(../../images/bg.webp) no-repeat center center / cover;
+  animation: kenburns-top 2s ease-out forwards;
+}
+
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  animation: bg-light 2s ease-out forwards;
+}
+
+@keyframes kenburns-top {
+  0% {
+    transform: scale(1.4) translateY(-15px);
+    transform-origin: top;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    transform-origin: 50% 16%;
+  }
+}
+
+@keyframes bg-light {
+  0% {
+    background: rgba(0, 0, 0, 1);
+  }
+  25% {
+    background: rgba(0, 0, 0, 0.85);
+  }
+  100% {
+    background: rgba(0, 0, 0, 0);
+  }
+}

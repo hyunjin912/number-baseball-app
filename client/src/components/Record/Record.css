@@ -1,0 +1,48 @@
+.record {
+  flex: 0 1 37%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: none;
+  border-right: none;
+  padding: 0px 10px 10px;
+}
+
+.record_tit {
+  display: flex;
+}
+
+.record_tit div {
+  flex: 1;
+  height: 40px;
+  padding: 10px 5px 10px;
+  font-weight: bold;
+}
+
+.record_list {
+  overflow-y: auto;
+  height: 420px;
+}
+
+.record_list li {
+  display: flex;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.record_list li div {
+  flex: 1;
+  padding: 5px;
+}
+
+.record_list li:last-child {
+  background: #00b0ff;
+  color: #fff;
+}
+
+@media (max-width: 750px) {
+  .record {
+    flex: 0 1 100%;
+  }
+
+  .record_list {
+    height: 25vh;
+  }
+}

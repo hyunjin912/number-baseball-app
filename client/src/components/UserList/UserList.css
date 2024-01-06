@@ -1,0 +1,101 @@
+.users {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  font-size: 12px;
+}
+.list_box {
+  background: whitesmoke;
+  width: 185px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  box-shadow: inset 1px 1px 0 white;
+}
+
+.my_nickname {
+  text-align: left;
+  padding-right: 22px;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: normal;
+  font-size: 14px;
+}
+
+.user_list {
+  overflow-y: auto;
+  height: 230px;
+  padding: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: none;
+  border-right: none;
+  text-align: left;
+}
+
+.user_list_dimmed {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: -1;
+}
+
+.total_users {
+  display: block;
+  background: #5db559;
+  width: 185px;
+  border-radius: 0 0 5px 5px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  box-shadow: inset 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.btn_user_list {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 27px;
+  height: 27px;
+  background: #d43535;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.btn_user_list::before {
+  content: '';
+  position: absolute;
+  width: 60%;
+  height: 2px;
+  background: #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 -5px #fff, 0 5px #fff;
+}
+
+.btn_user_list.cancel {
+  background: whitesmoke;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn_user_list.cancel::before,
+.btn_user_list.cancel::after {
+  content: '';
+  position: absolute;
+  width: 60%;
+  height: 2px;
+  background: #000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.btn_user_list.cancel::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
