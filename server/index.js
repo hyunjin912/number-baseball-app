@@ -253,7 +253,7 @@ io.on('connection', async (socket) => {
     const findedUser = await userController.getUser(token);
     const findedRoom = await roomController.getRoomByUser(findedUser.nickname);
     const { usersInTheRoom } = findedRoom;
-    const totalSec = 10;
+    const totalSec = 90;
 
     io.to(`room-${findedRoom.roomNumber}`).emit('timer', totalSec);
     clear = setInterval(
