@@ -270,6 +270,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
         setRecords([]);
       }
     });
+
     socket?.on('timer', (sec) => {
       setSec(sec);
     });
