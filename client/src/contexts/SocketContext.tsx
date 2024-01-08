@@ -301,6 +301,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
       switch (pathname) {
         case '/':
           socket?.disconnect();
+          socket?.off();
           socket?.connect();
           setUser(null);
           setIsLogin(false);

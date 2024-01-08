@@ -73,7 +73,7 @@ export default function Talk() {
   const onReady = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      
+
       callReady(input.settingNumber);
     },
     [input],
@@ -112,10 +112,12 @@ export default function Talk() {
 
     if (settingNumberElemShouldAutoFocus) {
       settingNumberElem.current!.focus();
+      talkListElem.current!.scrollTop = talkListElem.current!.scrollHeight;
     }
 
     if (attackNumberElemShouldAutoFocus) {
       attackNumberElem.current!.focus();
+      talkListElem.current!.scrollTop = talkListElem.current!.scrollHeight;
     }
   }, [room]);
 
