@@ -23,7 +23,7 @@ export type User = {
 };
 
 export type RegisterInfo = {
-  // 나중에 비밀번호, 이메일 등 추가 될 여지가 있어니 객체로 하자
+  // 나중에 비밀번호, 이메일 등 추가 될 여지가 있으니 객체로 사용
   nickname: string;
 };
 
@@ -66,7 +66,6 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
       if (data.ok) {
         setUser(data.currentUser);
-        // navigate('/room', { replace: true });
         navigate('/room');
       } else {
         setErrorMessage(data.error);

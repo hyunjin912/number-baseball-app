@@ -18,7 +18,6 @@ type SocketProviderProps = {
 };
 
 export type Message = {
-  // type: 'system' | 'user';
   type: 'system' | 'user' | 'rule';
   nickname?: string;
   team?: string;
@@ -29,7 +28,6 @@ export type Room = {
   author: User;
   roomName: string;
   roomNumber: string;
-  // usersInTheRoom: string[],
   usersInTheRoom: {
     nickname: string;
     team: string;
@@ -40,7 +38,7 @@ export type Room = {
 };
 
 export type RoomRegisterInfo = {
-  // 나중에 비밀번호, 인원추가, 등 추가 될 여지가 있어니 객체로 하자
+  // 나중에 비밀번호, 인원추가 등 추가 될 여지가 있으니 객체로 사용
   roomname: string;
 };
 
@@ -55,7 +53,6 @@ interface ServerToClientEvents {
   getMessage: (message: Message[] | []) => void;
   getRecord: (record: { attackNumber: string; score: string }[] | []) => void;
   timer: (sec: number) => void;
-  //
   callTimer: (timerType: 'start' | 'clear') => void;
   changeTurn: () => void;
   win: () => void;
@@ -100,7 +97,6 @@ interface ClientToServerEvents {
     room: Room,
     callback: (data: ClientCallbackData) => void,
   ) => void;
-  //
   startTimer: () => void;
   clearTimer: () => void;
 }
@@ -140,7 +136,6 @@ export default function SocketProvider({ children }: SocketProviderProps) {
       author: user!._id,
       roomName: roomName ? roomName : `${user!.nickname}님의 방`,
       roomNumber: user!.token,
-      // usersInTheRoom: [user!.nickname],
       usersInTheRoom: [
         {
           nickname: user!.nickname,
@@ -178,7 +173,6 @@ export default function SocketProvider({ children }: SocketProviderProps) {
 
       socket?.emit('selectTeam', team, room!, (data) => {
         if (data.newRoom) {
-          // setRoom(data.newRoom);
         } else {
           console.log('selectTeam!!!!! - ', data.error);
         }
@@ -191,22 +185,12 @@ export default function SocketProvider({ children }: SocketProviderProps) {
     (attackNumber: string) => {
       socket?.emit('sendMessage', attackNumber, room!, (data) => {
         if (data.messages) {
-          // setMessages(data.messages);
           console.log('sendMessage!! - ', data.messages);
         }
       });
     },
     [socket, room],
   );
-
-  // const callReady = useCallback(
-  //   (isReady: boolean) => {
-  //     socket?.emit('callReady', isReady, room!, (data) => {
-  //       console.log('callReady - ', data);
-  //     });
-  //   },
-  //   [socket, room],
-  // );
 
   const callReady = useCallback(
     (settingNumber: string) => {
@@ -254,7 +238,6 @@ export default function SocketProvider({ children }: SocketProviderProps) {
     });
 
     socket?.on('updateRoom', (updatedRoom, resetRoom) => {
-      console.log('업데이트 해라! 방! - ', updatedRoom);
       setRoom(updatedRoom);
 
       // 게스트 퇴장 시 호스트의 룸 설정을 리셋
@@ -267,14 +250,6 @@ export default function SocketProvider({ children }: SocketProviderProps) {
 
     // 호스트 퇴장 시 게스트의 모든 설정 리셋
     socket?.on('leaveRoom', () => {
-      console.log('🔰🔰eaaaaavvvvvvvvvvvvv');
-      // setRoom(null);
-      // setTeam('');
-      // setIsReady(false);
-      // setTimer(false);
-      // setIsMyTurn(false);
-      // setRecords([]);
-      // setMessages([]);
       resetRoomSettings();
       navigate('/room', { replace: true });
       setIsHostGone(true);
@@ -295,34 +270,27 @@ export default function SocketProvider({ children }: SocketProviderProps) {
         setRecords([]);
       }
     });
-
-    // ------ test들 s -----
     socket?.on('timer', (sec) => {
       setSec(sec);
     });
 
     socket?.on('callTimer', (type) => {
       if (type === 'start') {
-        console.log('startTimer ------- ');
         socket?.emit('startTimer');
       }
 
       if (type === 'clear') {
-        console.log('------- clearTimer');
         socket?.emit('clearTimer');
       }
     });
 
     socket?.on('changeTurn', () => {
-      console.log(`🔰🔰turn user - ${isMyTurn}-> ${!isMyTurn}`);
       setIsMyTurn((prev) => !prev);
     });
 
     socket?.on('win', () => {
       setIsWin(true);
     });
-
-    // ------ test들 e -----
   }, [user, socket]);
 
   useEffect(() => {
@@ -344,25 +312,11 @@ export default function SocketProvider({ children }: SocketProviderProps) {
               // 호스트 퇴장 시 호스트의 모든 설정 리셋
               socket?.emit('deleteRoom', room, (data) => {
                 resetRoomSettings();
-                // setRoom(null);
-                // setTeam('');
-                // setIsReady(false);
-                // setTimer(false);
-                // setIsMyTurn(false);
-                // setRecords([]);
-                // setMessages([]);
               });
             } else {
               // 게스트 퇴장 시 게스트의 모든 설정 리셋
               socket?.emit('leaveRoom', room, (data) => {
                 resetRoomSettings();
-                // setRoom(null);
-                // setTeam('');
-                // setIsReady(false);
-                // setTimer(false);
-                // setIsMyTurn(false);
-                // setRecords([]);
-                // setMessages([]);
               });
             }
           }

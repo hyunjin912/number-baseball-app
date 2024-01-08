@@ -9,7 +9,6 @@ type RoomItemProps = {
 export default function RoomItem({ room }: RoomItemProps) {
   const { enterRoom } = useSocketContext();
   const onEnter = () => {
-    console.log(room);
     enterRoom(room);
   };
 
