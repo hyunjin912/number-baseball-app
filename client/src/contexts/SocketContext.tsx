@@ -217,7 +217,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
 
   // 소켓 연결
   useEffect(() => {
-    const newSocket = io('http://localhost:4000');
+    const newSocket = io(`${process.env.REACT_APP_SOCKET}`);
     setSocket(newSocket);
   }, []);
 

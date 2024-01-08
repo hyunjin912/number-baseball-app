@@ -12,13 +12,13 @@ app.use(cors());
 app.use(express.json());
 
 mongoose
-  .connect(process.env.DB)
+  .connect(`${process.env.DB}`)
   .then(() => console.log('MongoDB Connect SUCCESS'))
   .catch((err) => console.log('MongoDB Connect ERROR\n', err));
 
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: `${process.env.SOCKET}`,
   },
 });
 

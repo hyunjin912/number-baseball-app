@@ -52,7 +52,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         return;
       }
 
-      const res = await fetch('http://localhost:4000/api/users', {
+      const res = await fetch(`${process.env.REACT_APP_API_USER}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Login.css';
-import { useNavigate } from 'react-router-dom';
 import Notice from '../Notice';
-import { useUserSetter } from '../../contexts/UserContext';
 import { useAuthContext } from '../../contexts/AuthContext';
 
 const noticeStyle: React.CSSProperties = {
@@ -22,7 +20,7 @@ export default function LoginBox() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateRegisterInfo({ ...registerInfo, [e.target.name]: e.target.value });
   };
-  
+
   return (
     <div className="login">
       <div className="login_box">
@@ -39,7 +37,6 @@ export default function LoginBox() {
               className="input_nickname"
               placeholder="Nickname"
               autoComplete="off"
-              // value={input}
               onChange={onChange}
             />
           </div>
