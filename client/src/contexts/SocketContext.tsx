@@ -82,21 +82,9 @@ interface ClientToServerEvents {
     callback: (data: ClientCallbackData) => void,
   ) => void;
   leaveRoom: (room: Room, callback: (data: ClientCallbackData) => void) => void;
-  selectTeam: (
-    team: string,
-    room: Room,
-    callback: (data: ClientCallbackData) => void,
-  ) => void;
-  sendMessage: (
-    attackNumber: string,
-    room: Room,
-    callback: (data: ClientCallbackData) => void,
-  ) => void;
-  callReady: (
-    settingNumber: string,
-    room: Room,
-    callback: (data: ClientCallbackData) => void,
-  ) => void;
+  selectTeam: (team: string, room: Room) => void;
+  sendMessage: (attackNumber: string, room: Room) => void;
+  callReady: (settingNumber: string, room: Room) => void;
   startTimer: () => void;
   clearTimer: () => void;
 }
@@ -148,6 +136,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
 
     navigate('/play');
 
+    // 방 생성
     socket?.emit('registerRoom', room, (data) => {
       if (data.newRoom) {
         setRoom(data.newRoom);
@@ -157,6 +146,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
 
   const enterRoom = useCallback(
     (room: Room) => {
+      // 방 입장
       socket?.emit('enterRoom', room, user, (data) => {
         navigate('/play');
         if (data.newRoom) {
@@ -171,23 +161,16 @@ export default function SocketProvider({ children }: SocketProviderProps) {
     (team: string) => {
       setTeam(team);
 
-      socket?.emit('selectTeam', team, room!, (data) => {
-        if (data.newRoom) {
-        } else {
-          console.log('selectTeam!!!!! - ', data.error);
-        }
-      });
+      // 팀 선택
+      socket?.emit('selectTeam', team, room!);
     },
     [socket, room],
   );
 
   const sendMessage = useCallback(
     (attackNumber: string) => {
-      socket?.emit('sendMessage', attackNumber, room!, (data) => {
-        if (data.messages) {
-          console.log('sendMessage!! - ', data.messages);
-        }
-      });
+      // 메세지 보내기
+      socket?.emit('sendMessage', attackNumber, room!);
     },
     [socket, room],
   );
@@ -196,9 +179,8 @@ export default function SocketProvider({ children }: SocketProviderProps) {
     (settingNumber: string) => {
       setIsReady(true);
 
-      socket?.emit('callReady', settingNumber, room!, (data) => {
-        console.log('callReady - ', data);
-      });
+      // 게임 준비
+      socket?.emit('callReady', settingNumber, room!);
     },
     [socket, room],
   );
@@ -224,19 +206,23 @@ export default function SocketProvider({ children }: SocketProviderProps) {
   useEffect(() => {
     if (!user || isLogin) return;
 
+    // 로그인
     socket?.emit('login', user, (data) => {
       setIsLogin(true);
       setUser(data.currentUser);
     });
 
+    // 전체 유저 상태 알림
     socket?.on('noticeUser', (users) => {
       setUsers(users);
     });
 
+    // 전체 방 상태 알림
     socket?.on('noticeRoom', (rooms) => {
       setRooms(rooms);
     });
 
+    // 방 설정 업데이트
     socket?.on('updateRoom', (updatedRoom, resetRoom) => {
       setRoom(updatedRoom);
 
@@ -255,6 +241,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
       setIsHostGone(true);
     });
 
+    // 메세지 받기
     socket?.on('getMessage', (message) => {
       if (message.length > 0) {
         setMessages((prev) => [...prev, ...message]);
@@ -263,6 +250,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
       }
     });
 
+    // 기록 받기
     socket?.on('getRecord', (record) => {
       if (record.length > 0) {
         setRecords((prev) => [...prev, ...record]);
@@ -271,10 +259,12 @@ export default function SocketProvider({ children }: SocketProviderProps) {
       }
     });
 
+    // 타이머 적용
     socket?.on('timer', (sec) => {
       setSec(sec);
     });
 
+    // 타이머 시작 및 멈춤
     socket?.on('callTimer', (type) => {
       if (type === 'start') {
         socket?.emit('startTimer');
@@ -285,10 +275,12 @@ export default function SocketProvider({ children }: SocketProviderProps) {
       }
     });
 
+    // 본인 차례 적용 및 취소
     socket?.on('changeTurn', () => {
       setIsMyTurn((prev) => !prev);
     });
 
+    // 승리
     socket?.on('win', () => {
       setIsWin(true);
     });
@@ -306,7 +298,6 @@ export default function SocketProvider({ children }: SocketProviderProps) {
           setUser(null);
           setIsLogin(false);
           updateRegisterInfo({ nickname: '' });
-          navigate('/');
           return;
         case '/room':
           if (room !== null) {

@@ -8,20 +8,26 @@ require('dotenv').config();
 const userController = require('./controllers/user.controller');
 const roomController = require('./controllers/room.controller');
 
+// cors 해결
 app.use(cors());
+
+// POST DATA 변환
 app.use(express.json());
 
+// 몽구스 연결
 mongoose
   .connect(`${process.env.DB}`)
   .then(() => console.log('MongoDB Connect SUCCESS'))
   .catch((err) => console.log('MongoDB Connect ERROR\n', err));
 
+// 소켓 연결
 const io = new Server(httpServer, {
   cors: {
     origin: `${process.env.SOCKET}`,
   },
 });
 
+// 소켓 이벤트
 io.on('connection', async (socket) => {
   const token = socket.id;
 
@@ -69,7 +75,7 @@ io.on('connection', async (socket) => {
         socket.to(`room-${room.roomNumber}`).emit('leaveRoom');
         socket.to(`room-${room.roomNumber}`).emit('callTimer', 'clear');
       }
-      // io.to(`room-${room.roomNumber}`).emit('getMessage', []);
+
       io.emit('noticeRoom', rooms);
     } catch (e) {
       cb({ ok: false, error: e.message });
@@ -409,24 +415,26 @@ io.on('connection', async (socket) => {
               sec: null,
               isMyTurn: false,
             });
+        } else {
+          socket.to(`room-${findedRoom.roomNumber}`).emit('leaveRoom');
+          socket.to(`room-${findedRoom.roomNumber}`).emit('callTimer', 'clear');
+
+          const deletedRoom = await roomController.deleteRoom(token);
+          const rooms = await roomController.getRooms();
+
+          io.emit('noticeRoom', rooms);
         }
       }
     }
 
-    const deletedRoom = await roomController.deleteRoom(token);
-    const rooms = await roomController.getRooms();
     const deletedUser = await userController.deleteUser(token);
     const users = await userController.getUsers();
 
-    io.emit('noticeRoom', rooms);
     io.emit('noticeUser', users);
-
-    // only host
-    socket.to(`room-${token}`).emit('leaveRoom');
-    socket.to(`room-${token}`).emit('callTimer', 'clear');
   });
 });
 
+// 유저 생성
 app.post('/api/users', async (req, res) => {
   try {
     const savedUser = await userController.saveUser(req.body);
@@ -436,8 +444,10 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
+// 앱 접속 시
 app.get('/', (req, res) => {
   res.send('Server is running');
 });
 
+// 소켓 서버 실행
 httpServer.listen(process.env.PORT || 4000);
