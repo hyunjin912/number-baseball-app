@@ -82,9 +82,21 @@ interface ClientToServerEvents {
     callback: (data: ClientCallbackData) => void,
   ) => void;
   leaveRoom: (room: Room, callback: (data: ClientCallbackData) => void) => void;
-  selectTeam: (team: string, room: Room) => void;
-  sendMessage: (attackNumber: string, room: Room) => void;
-  callReady: (settingNumber: string, room: Room) => void;
+  selectTeam: (
+    team: string,
+    room: Room,
+    callback: (data: ClientCallbackData) => void,
+  ) => void;
+  sendMessage: (
+    attackNumber: string,
+    room: Room,
+    callback: (data: ClientCallbackData) => void,
+  ) => void;
+  callReady: (
+    settingNumber: string,
+    room: Room,
+    callback: (data: ClientCallbackData) => void,
+  ) => void;
   startTimer: () => void;
   clearTimer: () => void;
 }
@@ -162,7 +174,12 @@ export default function SocketProvider({ children }: SocketProviderProps) {
       setTeam(team);
 
       // 팀 선택
-      socket?.emit('selectTeam', team, room!);
+      socket?.emit('selectTeam', team, room!, (data) => {
+        if (data.error) {
+          alert('예기치 못한 에러가 발생했습니다. 다시 시작합니다.');
+          window.location.reload();
+        }
+      });
     },
     [socket, room],
   );
@@ -170,7 +187,12 @@ export default function SocketProvider({ children }: SocketProviderProps) {
   const sendMessage = useCallback(
     (attackNumber: string) => {
       // 메세지 보내기
-      socket?.emit('sendMessage', attackNumber, room!);
+      socket?.emit('sendMessage', attackNumber, room!, (data) => {
+        if (data.error) {
+          alert('예기치 못한 에러가 발생했습니다. 다시 시작합니다.');
+          window.location.reload();
+        }
+      });
     },
     [socket, room],
   );
@@ -180,7 +202,12 @@ export default function SocketProvider({ children }: SocketProviderProps) {
       setIsReady(true);
 
       // 게임 준비
-      socket?.emit('callReady', settingNumber, room!);
+      socket?.emit('callReady', settingNumber, room!, (data) => {
+        if (data.error) {
+          alert('예기치 못한 에러가 발생했습니다. 다시 시작합니다.');
+          window.location.reload();
+        }
+      });
     },
     [socket, room],
   );

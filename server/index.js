@@ -125,8 +125,6 @@ io.on('connection', async (socket) => {
 
       await findedRoom.save();
 
-      cb({ ok: true, newRoom: findedRoom });
-
       io.to(`room-${room.roomNumber}`).emit('updateRoom', findedRoom);
 
       isHost
@@ -167,8 +165,6 @@ io.on('connection', async (socket) => {
         socket.to(`room-${room.roomNumber}`).emit('getMessage', [newMessage]);
       }
 
-      cb({ ok: true });
-
       const rooms = await roomController.getRooms();
       socket.emit('getMessage', []);
       socket.to(`room-${room.roomNumber}`).emit('callTimer', 'clear');
@@ -204,8 +200,6 @@ io.on('connection', async (socket) => {
       };
       findedRoom.messages.push(newMessage);
       await findedRoom.save();
-
-      cb({ ok: true, messages: findedRoom.messages });
 
       io.to(`room-${room.roomNumber}`).emit('updateRoom', findedRoom);
       io.to(`room-${room.roomNumber}`).emit('getMessage', [newMessage]);
@@ -336,8 +330,6 @@ io.on('connection', async (socket) => {
       } else {
         score = `${strikeCount}S ${ballCount}B`;
       }
-
-      cb({ ok: true, messages: findedRoom.messages });
 
       io.to(`room-${room.roomNumber}`).emit('updateRoom', findedRoom);
       io.to(`room-${room.roomNumber}`).emit('getMessage', [newMessage]);
