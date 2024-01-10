@@ -23,7 +23,7 @@ mongoose
 // 소켓 연결
 const io = new Server(httpServer, {
   cors: {
-    origin: `${process.env.SOCKET}`,
+    origin: `${process.env.SOCKET || 'http://localhost:3000'}`,
   },
 });
 
@@ -438,7 +438,11 @@ app.post('/api/users', async (req, res) => {
 
 // 앱 접속 시
 app.get('/', (req, res) => {
-  res.send('Server is running');
+  if (process.env.NODE_ENV === 'production') {
+    res.send('Server is running');
+  } else {
+    res.send('Local is running');
+  }
 });
 
 // 소켓 서버 실행

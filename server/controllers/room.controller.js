@@ -1,14 +1,5 @@
 const roomModel = require('../models/room.model');
 
-// author: {
-//     type: mongoose.Schema.ObjectId,
-//     ref: 'User',
-//   },
-//   roomName: String,
-//   roomNumber: String,
-//   usersInTheRoom: [String],
-// });
-
 const roomController = {
   saveRoom: async (room) => {
     let newRoom = await roomModel.findOne({ roomNumber: room.roomNumber });
@@ -44,11 +35,6 @@ const roomController = {
   },
 
   getRoomByUser: async (nickname) => {
-    // const room = await roomModel
-    //   .findOne({
-    //     usersInTheRoom: { nickname },
-    //   })
-    //   .populate('author');
     const room = await roomModel
       .findOne({
         usersInTheRoom: {

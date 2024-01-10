@@ -24,7 +24,6 @@ const userController = {
   },
 
   getUsers: async () => {
-    // online 유저만 반환
     const users = await userModel.find({ isOnline: true });
     return users;
   },
