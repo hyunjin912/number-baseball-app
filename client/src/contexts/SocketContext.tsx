@@ -133,7 +133,7 @@ export default function SocketProvider({ children }: SocketProviderProps) {
   const registerRoom = useCallback(() => {
     const roomName = roomRegisterInfo.roomname.trim();
     const room: Room = {
-      author: user!._id,
+      author: process.env.REACT_APP_NODE_ENV ? user!._id : user,
       roomName: roomName ? roomName : `${user!.nickname}님의 방`,
       roomNumber: user!.token,
       usersInTheRoom: [
@@ -226,7 +226,9 @@ export default function SocketProvider({ children }: SocketProviderProps) {
 
   // 소켓 연결
   useEffect(() => {
-    const newSocket = io(`${process.env.REACT_APP_SOCKET}`);
+    const newSocket = io(
+      process.env.REACT_APP_SOCKET || 'http://localhost:4000',
+    );
     setSocket(newSocket);
   }, []);
 

@@ -15,15 +15,19 @@ app.use(cors());
 app.use(express.json());
 
 // 몽구스 연결
-mongoose
-  .connect(`${process.env.DB}`)
-  .then(() => console.log('MongoDB Connect SUCCESS'))
-  .catch((err) => console.log('MongoDB Connect ERROR\n', err));
+if (process.env.NODE_ENV === 'production') {
+  mongoose
+    .connect(process.env.DB)
+    .then(() => console.log('MongoDB Connect SUCCESS'))
+    .catch((err) => console.log('MongoDB Connect ERROR\n', err));
+} else {
+  console.log('Local server SUCCESS');
+}
 
 // 소켓 연결
 const io = new Server(httpServer, {
   cors: {
-    origin: `${process.env.SOCKET || 'http://localhost:3000'}`,
+    origin: process.env.SOCKET || 'http://localhost:3000',
   },
 });
 
@@ -43,7 +47,7 @@ io.on('connection', async (socket) => {
 
       cb({ ok: true, currentUser: updatedUser });
 
-      io.emit('noticeRoom', rooms);
+      socket.emit('noticeRoom', rooms);
       io.emit('noticeUser', users);
     } catch (e) {
       cb({ ok: false, error: e.message });
@@ -118,6 +122,7 @@ io.on('connection', async (socket) => {
         type: 'rule',
         msg: '숫자 야구 게임에 오신 것을 환영합니다. 양 팀이 하단에 생성된 입력 창 중에서 상대 팀이 맞춰야 하는 숫자 4자리를 설정 후 READY 버튼 클릭 시 시작되며, 나머지 입력 창에 4자리를 입력하여 상대 팀의 번호를 맞추면 됩니다. 순서는 방장부터 시작하며 각 팀당 90초입니다. 90초가 지나면 기회를 잃게 되는 점 주의해주세요.',
       };
+
       const isHost = findedRoom.author.nickname === findedUser.nickname;
       isHost
         ? findedRoom.messages.push(newMessage)
@@ -164,6 +169,8 @@ io.on('connection', async (socket) => {
 
         socket.to(`room-${room.roomNumber}`).emit('getMessage', [newMessage]);
       }
+
+      cb({ ok: true });
 
       const rooms = await roomController.getRooms();
       socket.emit('getMessage', []);
@@ -412,10 +419,10 @@ io.on('connection', async (socket) => {
           socket.to(`room-${findedRoom.roomNumber}`).emit('callTimer', 'clear');
 
           const deletedRoom = await roomController.deleteRoom(token);
-          const rooms = await roomController.getRooms();
-
-          io.emit('noticeRoom', rooms);
         }
+
+        const rooms = await roomController.getRooms();
+        io.emit('noticeRoom', rooms);
       }
     }
 

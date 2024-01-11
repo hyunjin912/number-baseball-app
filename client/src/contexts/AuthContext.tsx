@@ -19,7 +19,7 @@ export type User = {
   [key: string]: unknown;
   nickname: string;
   token: string;
-  _id: string;
+  _id?: string;
 };
 
 export type RegisterInfo = {
@@ -52,15 +52,18 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         return;
       }
 
-      const res = await fetch(`${process.env.REACT_APP_API_USER}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const res = await fetch(
+        process.env.REACT_APP_API_USER || 'http://localhost:4000/api/users',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nickname: registerInfo.nickname.trim(),
+          }),
         },
-        body: JSON.stringify({
-          nickname: registerInfo.nickname.trim(),
-        }),
-      });
+      );
 
       const data = await res.json();
 
