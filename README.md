@@ -67,9 +67,9 @@ npm run dev
 ```
 
 ## Screenshots
-
-<div style='display: flex; gap: 10px; overflow: auto;'>
-    <img src='./screenshots/screenshot-01.png' />
-    <img src='./screenshots/screenshot-02.png' />
-    <img src='./screenshots/screenshot-03.png' />
-</div>
+#### 메인
+![메인](./screenshots/screenshot-01.png)
+#### 대기실
+![대기실](./screenshots/screenshot-02.png)
+#### 게임시작
+![게임시작](./screenshots/screenshot-03.png)
