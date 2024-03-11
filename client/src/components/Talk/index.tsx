@@ -101,26 +101,6 @@ export default function Talk() {
     talkListElem.current!.scrollTop = talkListElem.current!.scrollHeight;
   }, [messages]);
 
-  useEffect(() => {
-    const settingNumberElemShouldAutoFocus = room.usersInTheRoom.every(
-      (user: (typeof room.usersInTheRoom)[0]) => user.team !== '',
-    );
-
-    const attackNumberElemShouldAutoFocus = room.usersInTheRoom.every(
-      (user: (typeof room.usersInTheRoom)[0]) => user.ready === true,
-    );
-
-    if (settingNumberElemShouldAutoFocus) {
-      settingNumberElem.current!.focus();
-      talkListElem.current!.scrollTop = talkListElem.current!.scrollHeight;
-    }
-
-    if (attackNumberElemShouldAutoFocus) {
-      attackNumberElem.current!.focus();
-      talkListElem.current!.scrollTop = talkListElem.current!.scrollHeight;
-    }
-  }, [room]);
-
   return (
     <div className="talk">
       <div className="talk_tit">
@@ -201,7 +181,6 @@ export default function Talk() {
                     }
                     onChange={onChange}
                     value={input.settingNumber}
-                    autoFocus={true}
                     disabled={
                       isReady ||
                       room.usersInTheRoom.length < 2 ||
