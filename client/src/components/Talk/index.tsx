@@ -25,7 +25,7 @@ export default function Talk() {
     callReady,
     isReady,
     room,
-    timer,
+    records,
     isMyTurn,
     sec,
   } = useSocketContext();
@@ -154,7 +154,19 @@ export default function Talk() {
                   ></div>
                   <div className="comment">
                     <div className="user">{isHost ? '' : msg.nickname}</div>
-                    <div className="txt">{msg.msg}</div>
+                    {isHost ? (
+                      msg.msg === '준비완료!!' ? (
+                        <div className="txt">{msg.msg}</div>
+                      ) : (
+                        <div className="txt">
+                          공격 : {msg.msg}
+                          <br />
+                          결과 : {msg.score}
+                        </div>
+                      )
+                    ) : (
+                      <div className="txt">{msg.msg}</div>
+                    )}
                   </div>
                 </li>
               );

@@ -304,14 +304,6 @@ io.on('connection', async (socket) => {
       const [otherUserInTheRoom] = usersInTheRoom.filter(
         (user) => user.nickname !== findedUser.nickname,
       );
-      const newMessage = {
-        type: 'user',
-        nickname: findedUser.nickname,
-        team: currentUserInTheRoom.team,
-        msg: attackNumber,
-      };
-      findedRoom.messages.push(newMessage);
-      await findedRoom.save();
 
       const numberToMatch = otherUserInTheRoom.settingNumber;
       let strikeCount = 0;
@@ -337,6 +329,16 @@ io.on('connection', async (socket) => {
       } else {
         score = `${strikeCount}S ${ballCount}B`;
       }
+
+      const newMessage = {
+        type: 'user',
+        nickname: findedUser.nickname,
+        team: currentUserInTheRoom.team,
+        msg: attackNumber,
+        score,
+      };
+      findedRoom.messages.push(newMessage);
+      await findedRoom.save();
 
       io.to(`room-${room.roomNumber}`).emit('updateRoom', findedRoom);
       io.to(`room-${room.roomNumber}`).emit('getMessage', [newMessage]);

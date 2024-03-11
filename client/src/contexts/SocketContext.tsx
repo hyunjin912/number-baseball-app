@@ -22,6 +22,7 @@ export type Message = {
   nickname?: string;
   team?: string;
   msg: string;
+  score: string;
 };
 
 export type Room = {
